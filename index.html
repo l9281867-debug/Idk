@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Sister.exe 💅</title>
+
+<style>
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    min-height:100vh;
+    font-family:Arial,sans-serif;
+    background:linear-gradient(135deg,#160d1f,#30152f,#111);
+    color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:20px;
+}
+
+.screen{
+    width:100%;
+    max-width:480px;
+    text-align:center;
+}
+
+.card{
+    background:rgba(25,18,30,.96);
+    border:2px solid #6d4a73;
+    border-radius:28px;
+    padding:30px 22px;
+    box-shadow:0 20px 60px rgba(0,0,0,.6);
+}
+
+.hidden{
+    display:none;
+}
+
+.emoji{
+    font-size:65px;
+    margin-bottom:10px;
+}
+
+h1{
+    font-size:28px;
+    margin:10px 0;
+}
+
+h2{
+    font-size:21px;
+}
+
+p{
+    color:#c9bdcc;
+    line-height:1.6;
+}
+
+button{
+    width:100%;
+    padding:15px;
+    margin:7px 0;
+    border:0;
+    border-radius:16px;
+    background:#4b3150;
+    color:white;
+    font-size:16px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:.2s;
+}
+
+button:hover{
+    transform:scale(1.03);
+    background:#704c76;
+}
+
+.progress{
+    width:100%;
+    height:12px;
+    background:#302532;
+    border-radius:20px;
+    overflow:hidden;
+    margin:20px 0;
+}
+
+.bar{
+    height:100%;
+    width:0%;
+    background:white;
+    transition:.2s;
+}
+
+.question{
+    font-size:20px;
+    font-weight:bold;
+    margin:20px 0;
+}
+
+.score{
+    font-size:15px;
+    color:#aaa;
+}
+
+#movingBtn{
+    position:relative;
+}
+
+.small{
+    font-size:12px;
+    color:#777;
+}
+
+.badge{
+    display:inline-block;
+    padding:8px 14px;
+    border-radius:20px;
+    background:#39253d;
+    margin:8px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- START -->
+<div class="screen" id="start">
+    <div class="card">
+        <div class="emoji">👭</div>
+        <h1>WELCOME, SISTER.</h1>
+        <p>
+            You have been selected for an extremely important test.
+        </p>
+
+        <p>
+            Your mission:<br>
+            <b>PROVE THAT YOU ACTUALLY KNOW YOUR SIBLING.</b> 💀
+        </p>
+
+        <p class="small">
+            Warning: Wrong answers may result in sibling embarrassment.
+        </p>
+
+        <button onclick="startGame()">START THE GAME 😈</button>
+    </div>
+</div>
+
+
+<!-- LOADING -->
+<div class="screen hidden" id="loading">
+    <div class="card">
+        <div class="emoji">🧠</div>
+        <h1 id="loadTitle">Initializing...</h1>
+
+        <div class="progress">
+            <div class="bar" id="bar"></div>
+        </div>
+
+        <p id="percent">0%</p>
+        <p id="loadText">Preparing sibling investigation...</p>
+    </div>
+</div>
+
+
+<!-- INTRO -->
+<div class="screen hidden" id="intro">
+    <div class="card">
+        <div class="emoji">🕵️‍♀️</div>
+        <h1>LEVEL 1</h1>
+
+        <p>
+            First we need to determine whether you are:
+        </p>
+
+        <div class="badge">A GOOD SISTER</div>
+        <div class="badge">A FAKE SISTER</div>
+
+        <button onclick="startQuestions()">
+            FIND OUT 👀
+        </button>
+    </div>
+</div>
+
+
+<!-- QUESTION 1 -->
+<div class="screen hidden" id="q1">
+    <div class="card">
+        <div class="emoji">🍕</div>
+
+        <p class="score" id="score1">Question 1 / 12</p>
+
+        <div class="question">
+            If I say "I'm not hungry"...
+            what probably happens 20 minutes later?
+        </div>
+
+        <button onclick="answer(1,true)">🍟 Give me food anyway</button>
+        <button onclick="answer(1,false)">😌 Believe me</button>
+        <button onclick="answer(1,false)">🏃 Run away</button>
+    </div>
+</div>
+
+
+<!-- QUESTION 2 -->
+<div class="screen hidden" id="q2">
+    <div class="card">
+        <div class="emoji">📱</div>
+
+        <p class="score">Question 2 / 12</p>
+
+        <div class="question">
+            What am I most likely doing when
+            I say "I'll study in 5 minutes"?
+        </div>
+
+        <button onclick="answer(2,true)">📱 Scrolling</button>
+        <button onclick="answer(2,false)">📚 Actually studying</button>
+        <button onclick="answer(2,false)">🏃 Running a marathon</button>
+    </div>
+</div>
+
+
+<!-- QUESTION 3 -->
+<div class="screen hidden" id="q3">
+    <div class="card">
+        <div class="emoji">😤</div>
+
+        <p class="score">Question 3 / 12</p>
+
+        <div class="question">
+            When I'm annoyed, what is my natural response?
+        </div>
+
+        <button onclick="answer(3,true)">😶 Go quiet</button>
+        <button onclick="answer(3,false)">📢 Give a 2-hour speech</button>
+        <button onclick="answer(3,false)">🕺 Start dancing</button>
+    </div>
+</div>
+
+
+<!-- QUESTION 4 -->
+<div class="screen hidden" id="q4">
+    <div class="card">
+        <div class="emoji">🎂</div>
+
+        <p class="score">Question 4 / 12</p>
+
+        <div class="question">
+            Which one would make me happiest?
+        </div>
+
+        <button onclick="answer(4,true)">🎁 A thoughtful surprise</button>
+        <button onclick="answer(4,false)">🧹 Cleaning supplies</button>
+        <button onclick="answer(4,false)">📄 A 300-page textbook</button>
+    </div>
+</div>
+
+
+<!-- QUESTION 5 -->
+<div class="screen hidden" id="q5">
+    <div class="card">
+        <div class="emoji">😂</div>
+
+        <p class="score">Question 5 / 12</p>
+
+        <div class="question">
+            If I suddenly say "BROOOO/SISTERRR!"
+            what should you expect?
+        </div>
+
+        <button onclick="answer(5,true)">🚨 Something happened</button>
+        <button onclick="answer(5,false)">😴 I'm going to sleep</button>
+        <button onclick="answer(5,false)">🧘 I'm peacefully meditating</button>
+    </div>
+</div>
+
+
+<!-- QUESTION 6 -->
+<div class="screen hidden" id="q6">
+    <div class="card">
+        <div class="emoji">🧁</div>
+
+        <p class="score">Question 6 / 12</p>
+
+        <div class="question">
+            I have one last piece of my favourite food.
+            What should you do?
+        </div>
+
+        <button onclick="answer(6,true)">🤝 Ask before taking it</button>
+        <button onclick="answer(6,false)">😈 Take it secretly</button>
+        <button onclick="answer(6,false)">🏃 Eat it and disappear</button>
+    </div>
+</div>
+
+
+<!-- QUESTION 7 -->
+<div class="screen hidden" id="q7">
+    <div class="card">
+        <div class="emoji">🧠</div>
+
+        <p class="score">Question 7 / 12</p>
+
+        <div class="question">
+            What do I need most after a terrible day?
+        </div>
+
+        <button onclick="answer(7,true)">❤️ Someone who listens</button>
+        <button onclick="answer(7,false)">📢 More lectures</button>
+        <button onclick="answer(7,false)">📝 A surprise exam</button>
+    </div>
+</div>
+
+
+<!-- QUESTION 8 -->
+<div class="screen hidden" id="q8">
+    <div class="card">
+        <div class="emoji">🎬</div>
+
+        <p class="score">Question 8 / 12</p>
+
+        <div class="question">
+            I suddenly get a crazy idea.
+            What are the chances I actually try it?
+        </div>
+
+        <button onclick="answer(8,true)">🔥 Very high</button>
+        <button onclick="answer(8,false)">0%</button>
+        <button onclick="answer(8,false)">Only during leap years</button>
+    </div>
+</div>
+
+
+<!-- QUESTION 9 -->
+<div class="screen hidden" id="q9">
+    <div class="card">
+        <div class="emoji">👀</div>
+
+        <p class="score">Question 9 / 12</p>
+
+        <div class="question">
+            Someone insults me.
+            What should you do?
+        </div>
+
+        <button onclick="answer(9,true)">🛡️ Defend me</button>
+        <button onclick="answer(9,false)">🍿 Watch the drama</button>
+        <button onclick="answer(9,false)">📸 Take pictures</button>
+    </div>
+</div>
+
+
+<!-- QUESTION 10 -->
+<div class="screen hidden" id="q10">
+    <div class="card">
+        <div class="emoji">💰</div>
+
+        <p class="score">Question 10 / 12</p>
+
+        <div class="question">
+            I ask you for ₹100.
+            Your first thought is...
+        </div>
+
+        <button onclick="answer(10,true)">"What happened?" 😭</button>
+        <button onclick="answer(10,false)">"Take ₹10,000."</button>
+        <button onclick="answer(10,false)">"I have no sister."</button>
+    </div>
+</div>
+
+
+<!-- QUESTION 11 -->
+<div class="screen hidden" id="q11">
+    <div class="card">
+        <div class="emoji">🫢</div>
+
+        <p class="score">Question 11 / 12</p>
+
+        <div class="question">
+            What's the most dangerous sentence I can say?
+        </div>
+
+        <button onclick="answer(11,true)">"I have an idea..."</button>
+        <button onclick="answer(11,false)">"Good morning."</button>
+        <button onclick="answer(11,false)">"I'm hungry."</button>
+    </div>
+</div>
+
+
+<!-- QUESTION 12 -->
+<div class="screen hidden" id="q12">
+    <div class="card">
+        <div class="emoji">❤️</div>
+
+        <p class="score">Question 12 / 12</p>
+
+        <div class="question">
+            Deep down, what am I to you?
+        </div>
+
+        <button onclick="answer(12,true)">❤️ My favourite sibling</button>
+        <button onclick="answer(12,false)">🤨 An unpaid assistant</button>
+        <button onclick="answer(12,false)">💀 A household problem</button>
+    </div>
+</div>
+
+
+<!-- SCORE -->
+<div class="screen hidden" id="scoreScreen">
+    <div class="card">
+        <div class="emoji">📊</div>
+
+        <h1>RESULTS ARE IN...</h1>
+
+        <h2 id="finalScore"></h2>
+
+        <p id="resultText"></p>
+
+        <button onclick="levelTwo()">
+            CONTINUE TO LEVEL 2 😈
+        </button>
+    </div>
+</div>
+
+
+<!-- LEVEL 2 -->
+<div class="screen hidden" id="level2">
+    <div class="card">
+        <div class="emoji">⚠️</div>
+
+        <h1>LEVEL 2</h1>
+
+        <p>
+            The questions are now harder.
+        </p>
+
+        <p>
+            There are no correct answers.
+            Only sibling consequences. 💀
+        </p>
+
+        <button onclick="choice1()">BEGIN CHAOS</button>
+    </div>
+</div>
+
+
+<!-- CHOICE 1 -->
+<div class="screen hidden" id="choice1">
+    <div class="card">
+        <div class="emoji">🍫</div>
+
+        <h2>I bought chocolate.</h2>
+
+        <p>
+            Your sibling asks for one piece.
+        </p>
+
+        <button onclick="chaos('You gave me the whole chocolate. LEGEND. ❤️')">
+            GIVE THE WHOLE THING
+        </button>
+
+        <button onclick="chaos('You gave one piece. Suspicious behaviour detected. 🤨')">
+            GIVE ONE PIECE
+        </button>
+
+        <button onclick="chaos('You hid it. I KNOW WHAT YOU DID. 👁️')">
+            HIDE IT
+        </button>
+    </div>
+</div>
+
+
+<!-- CHOICE 2 -->
+<div class="screen hidden" id="choice2">
+    <div class="card">
+        <div class="emoji">📺</div>
+
+        <h2>REMOTE CONTROL WAR</h2>
+
+        <p>
+            Both of us want the remote.
+        </p>
+
+        <button onclick="chaos2('Diplomatic solution. Respect. 🫡')">
+            TAKE TURNS
+        </button>
+
+        <button onclick="chaos2('THE BATTLE HAS BEGUN. 💀')">
+            FIGHT FOR IT
+        </button>
+
+        <button onclick="chaos2('You surrendered immediately. 😂')">
+            GIVE UP
+        </button>
+    </div>
+</div>
+
+
+<!-- MOVING BUTTON -->
+<div class="screen hidden" id="escape">
+    <div class="card">
+
+        <div class="emoji">🚪</div>
+
+        <h1>FINAL ESCAPE</h1>
+
+        <p>
+            Click the button to escape this game.
+        </p>
+
+        <button id="movingBtn" onclick="escapeAttempt()">
+            ESCAPE 🏃
+        </button>
+
+        <button onclick="fakeButton()">
+            SECRET EXIT 🔑
+        </button>
+
+        <p class="small">
+            Hint: one of these is definitely lying.
+        </p>
+    </div>
+</div>
+
+
+<!-- FINAL -->
+<div class="screen hidden" id="final">
+    <div class="card">
+
+        <div class="emoji">👑</div>
+
+        <h1>SISTER VERDICT</h1>
+
+        <p>
+            After extensive scientific research...
+        </p>
+
+        <h2>YOU ARE OFFICIALLY:</h2>
+
+        <div class="badge">
+            THE CHAOTIC SISTER 😂
+        </div>
+
+        <p>
+            Annoying? Sometimes.<br>
+            Dramatic? Absolutely.<br>
+            Useful? Occasionally. 😌<br><br>
+
+            But most importantly...
+        </p>
+
+        <h1>❤️ YOU'RE MY SISTER ❤️</h1>
+
+        <p>
+            Unfortunately, you're stuck with me.
+            No refunds. 💀
+        </p>
+
+        <button onclick="restart()">
+            PLAY AGAIN 🔄
+        </button>
+    </div>
+</div>
+
+
+<script>
+
+let score = 0;
+
+let questionsAnswered = 0;
+
+
+/* START */
+
+function startGame(){
+
+    show("loading");
+
+    let progress = 0;
+
+    const bar = document.getElementById("bar");
+    const percent = document.getElementById("percent");
+    const title = document.getElementById("loadTitle");
+    const text = document.getElementById("loadText");
+
+    const messages = [
+        "Detecting sister...",
+        "Checking drama levels...",
+        "Scanning sibling memories...",
+        "Calculating attitude...",
+        "Searching for hidden snacks...",
+        "Detecting suspicious behaviour...",
+        "Almost done..."
+    ];
+
+    const timer = setInterval(function(){
+
+        progress += 5;
+
+        if(progress > 100){
+            progress = 100;
+        }
+
+        bar.style.width = progress + "%";
+        percent.innerText = progress + "%";
+
+        let index = Math.floor(progress / 15);
+
+        if(index >= messages.length){
+            index = messages.length - 1;
+        }
+
+        title.innerText = messages[index];
+
+        if(progress === 100){
+
+            clearInterval(timer);
+
+            text.innerText =
+                "Sister successfully detected. 💀";
+
+            setTimeout(function(){
+                show("intro");
+            },1200);
+        }
+
+    },100);
+}
+
+
+/* SCREEN CONTROL */
+
+function hideAll(){
+
+    document
+    .querySelectorAll(".screen")
+    .forEach(function(screen){
+        screen.classList.add("hidden");
+    });
+
+}
+
+function show(id){
+
+    hideAll();
+
+    document
+    .getElementById(id)
+    .classList.remove("hidden");
+
+}
+
+
+/* START QUESTIONS */
+
+function startQuestions(){
+
+    score = 0;
+    questionsAnswered = 0;
+
+    show("q1");
+}
+
+
+/* ANSWERS */
+
+function answer(questionNumber,correct){
+
+    questionsAnswered++;
+
+    if(correct){
+        score++;
+    }
+
+    if(questionNumber < 12){
+
+        show("q" + (questionNumber + 1));
+
+    }else{
+
+        showScore();
+
+    }
+
+}
+
+
+/* SCORE */
+
+function showScore(){
+
+    show("scoreScreen");
+
+    document.getElementById("finalScore").innerText =
+        score + " / 12";
+
+    let text = "";
+
+    if(score >= 10){
+
+        text =
+        "WOW 😭 You actually know me. " +
+        "Suspiciously good sister detected. 👑";
+
+    }else if(score >= 7){
+
+        text =
+        "Okay okay... you know me pretty well. " +
+        "I'll allow it. 😌";
+
+    }else if(score >= 4){
+
+        text =
+        "We literally live together. " +
+        "HOW DID YOU GET THIS MANY WRONG?! 💀";
+
+    }else{
+
+        text =
+        "This is not a sister. " +
+        "This is an undercover stranger. 🚨😂";
+
+    }
+
+    document.getElementById("resultText").innerText = text;
+}
+
+
+/* LEVEL 2 */
+
+function levelTwo(){
+
+    show("level2");
+
+}
+
+
+/* CHAOS */
+
+function choice1(){
+
+    show("choice1");
+
+}
+
+function chaos(message){
+
+    alert(message);
+
+    show("choice2");
+
+}
+
+function chaos2(message){
+
+    alert(message);
+
+    show("escape");
+
+}
+
+
+/* ESCAPE ROOM */
+
+let attempts = 0;
+
+function escapeAttempt(){
+
+    attempts++;
+
+    const button =
+        document.getElementById("movingBtn");
+
+    if(attempts < 5){
+
+        const x =
+            Math.random() * 220 - 110;
+
+        const y =
+            Math.random() * 120 - 60;
+
+        button.style.transform =
+            "translate(" + x + "px," + y + "px)";
+
+        alert(
+            "HAHAHA 😂\n\n" +
+            "YOU THOUGHT YOU COULD ESCAPE?"
+        );
+
+    }else{
+
+        alert(
+            "🚨 ESCAPE FAILED 🚨\n\n" +
+            "The sister has trapped you."
+        );
+
+        show("final");
+
+    }
+
+}
+
+
+function fakeButton(){
+
+    alert(
+        "❌ WRONG EXIT\n\n" +
+        "Nice try though. 💀"
+    );
+
+}
+
+
+/* RESTART */
+
+function restart(){
+
+    score = 0;
+    questionsAnswered = 0;
+    attempts = 0;
+
+    document
+        .getElementById("movingBtn")
+        .style.transform = "none";
+
+    document
+        .getElementById("bar")
+        .style.width = "0%";
+
+    show("start");
+
+}
+
+</script>
+
+</body>
+</html>
